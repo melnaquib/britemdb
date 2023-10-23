@@ -1,5 +1,21 @@
-# fastapi-starter-template
+# Brite MDB
+An API to run
 
+## run on docker;
+
+docker compose up
+
+## run tests
+- install firebase tools; for example for Linux or Mac;
+curl -sL https://firebase.tools | bash
+- install poetry
+
+- install dependencies
+poetry shell
+poetry install
+
+- run local tests
+firebase --only firestore emulators:exec "poetry run pytest tests/endpoints"
 
 ##  Description
 
@@ -59,11 +75,11 @@ cd fastapi-starter-template
 docker-compose up
 ```
 
-Afterwards, the project will be live at [http://localhost:5000](http://localhost:5000).
+Afterwards, the project will be live at [http://localhost:5000](http://localhost:8000).
 
 ## Documentation
 
-FastAPI automatically generates documentation based on the specification of the endpoints you have written. You can find the docs at [http://localhost:5000/docs](http://localhost:5000/docs).
+FastAPI automatically generates documentation based on the specification of the endpoints you have written. You can find the docs at [http://localhost:8000/docs](http://localhost:5000/docs).
 
 ## Testing
 

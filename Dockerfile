@@ -1,19 +1,27 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM python:3.9 as requirements-stage
+
+WORKDIR /tmp
+
+RUN pip install poetry
+
+COPY ./pyproject.toml ./poetry.lock* /tmp/
+
+# ARG INSTALL_DEV=false
+# RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --no-dev ; fi"
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# Install Poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_HOME=/opt/poetry python && \
-    cd /usr/local/bin && \
-        ln -s /opt/poetry/bin/poetry && \
-            poetry config virtualenvs.create false
+COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 
-# Copy poetry.lock* in case it doesn't exist in the repo
-COPY ./pyproject.toml ./poetry.lock* /app/
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-ARG INSTALL_DEV=false
-RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --no-dev ; fi"
+COPY ./app /app
 
-COPY ./app /app/app
 ENV VARIABLE_NAME=api
 ENV PYTHONPATH=/api

@@ -1,11 +1,34 @@
 version: '3.8'
 services:
+    firestore:
+        hostname: firestore
+        image: matthewkrupnik/docker-firestore-emulator-with-ui
+#        image: andreysenov/firebase-tools
+        environment:
+            - FIRESTORE_HOST=0.0.0.0
+        ports:
+            - '8080:8080'
+            - '4000:4000'
+            - '9099:9099'
+            - '9000:9000'
+            - '9199:9199'
+#        command: "firebase emulator:start"
+
     api:
         restart: always
         hostname: api
         build: .
+        env_file:
+            - "sample.env"
+            - "docker-compose.env"
         ports:
-            - '8000:80'
+            - '80:8080'
+        depends_on:
+            - firestore
         volumes:
             - "./app:/app/app"
-        command: /start-reload.sh
+#        entrypoint: /start-reload.sh
+        # entrypoint: bash -c "source /.env && source /docker-compose.env && source /testconf.env && /start-reload.sh"
+#        entrypoint: bash -c "cat /start-reload.sh"
+#        command: /start-reload.sh
+

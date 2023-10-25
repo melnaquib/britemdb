@@ -1,9 +1,26 @@
 # Brite MDB
-An API to run
+An API to manage a collection of movies
 
-## run on docker;
+deployed at;
+https://britemdb-dkckvyosiq-ue.a.run.app
 
+user credentials to use delete api;
+user1
+passwd1
+
+# SETUP AND RUN
+
+edit .env with appropriate values if needed, current values have my secrets for convenience and should run ok
+cp sample.env .env
+
+## to run on gcp
+cp sample.env .env
+./init_gcp.sh
+
+## to run locally
+cp sample.env .env
 docker compose up
+- open http://localhost/
 
 ## run tests
 - install firebase tools; for example for Linux or Mac;
@@ -15,11 +32,19 @@ poetry shell
 poetry install
 
 - run local tests
+cp sample.env .env
 firebase --only firestore emulators:exec "poetry run pytest tests/endpoints"
 
 ##  Description
 
-This is a basic python api setup using the FastAPI framework. It is deployable to the cloud out of the box without much configuration or changes needed (if any at all).
+- api is developed with FastAPI, provides openapi.json and swagger ui as well
+- api deploys to cloud run
+- store data on firestore backend, emulated locally for local run and tests
+
+This is a basic python api setup using the FastAPI framework. It is deployable to the Google Cloud.
+
+
+## Based on FastApi Poetry Template from github.com:zdmwi/fastapi-starter-template
 
 ###  Directory Structure
 ```

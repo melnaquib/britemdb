@@ -13,8 +13,13 @@ class Config(BaseSettings):
 
     omdb_apikey: str
 
-    firestore_emulator_host: str
+    movies_collection: str = "movies"
 
+    init_db_search: str = "star"
+
+    # firestore_emulator_host: str = ""
+    firestore_local: bool = False
+    run_mode_db_init: bool = False
 
 
 config = Config()

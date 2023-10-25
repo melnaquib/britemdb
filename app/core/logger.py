@@ -4,7 +4,7 @@ from app.core.config import config
 
 gunicorn_logger = logging.getLogger('gunicorn.error')
 logger = logging.getLogger(config.service_name)
-logger.handlers = gunicorn_logger.handlers
+handlers = gunicorn_logger.handlers
 logger.setLevel(gunicorn_logger.level)
 logger.propagate = False
 

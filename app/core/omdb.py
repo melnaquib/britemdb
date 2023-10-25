@@ -1,17 +1,21 @@
 import os
 
 from app.core import database, config
+from app.core.logger import logger
+
 from typing import List, Dict
 import json
 import httpx
 from functools import reduce
 import operator
 
+
 def apikey():
     return config.config.omdb_apikey
 
 async def _get_page(search :str, page :int):
-    # endpoint = "https://www.omdbapi.com/?apikey=a1a0a896&type=movie&s=star+trek&page=1&plot=full"
+    logger.info("get 10 movies with search term %s , page %i", search, page )
+
     endpoint = "https://www.omdbapi.com/"
     params = {
         "apikey": apikey(),
@@ -25,10 +29,12 @@ async def _get_page(search :str, page :int):
         r = await client.get(endpoint, params=params)
         bodyj = r.json()
         results = bodyj["Search"]
+        logger.info("movies recieved, page %i", page)
         return results
 
 async def get_100_movies(search="star trek") -> List[object]:
     search = search.replace(" ", "+")
+    logger.info("get 100 movies with search term " + search)
     movies = [await _get_page(search, page) for page in range(1, 11)]
     movies = reduce(operator.iconcat, movies, [])
     return movies

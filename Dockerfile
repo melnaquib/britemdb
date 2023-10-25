@@ -21,7 +21,23 @@ COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
-COPY ./app /app
+#COPY ./app /app
+COPY ./app /app/app
+
+COPY sample.env /sample.env
+COPY .env /.env
+COPY docker-compose.env /docker-compose.env
+COPY tests/testconf.env /testconf.env
 
 ENV VARIABLE_NAME=api
-ENV PYTHONPATH=/api
+ENV PYTHONPATH=/api;/
+
+#ENTRYPOINT "source /.env && /start-reload.sh"
+#ENTRYPOINT bash -c "source /.env && source /docker-compose.env && source /testconf.env && /start-reload.sh"
+#ENTRYPOINT bash -c "source /.env && source /docker-compose.env && /start-reload.sh"
+#ENTRYPOINT bash -c "source /.env && /start-reload.sh"
+#ENTRYPOINT bash -c "source /sample.env && /start-reload.sh"
+#ENTRYPOINT bash -c "source /sample.env && echo /start-reload.sh $PORT"
+#ENTRYPOINT echo $
+
+ENTRYPOINT ["/bin/bash", "-c", "source /sample.env && /start-reload.sh"]
